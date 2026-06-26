@@ -1,0 +1,10 @@
+Resource	File or landing page	URL	Notes
+ICGT cacao GWAS/GS article	PLOS ONE article	https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0260907	Source for cacao phenotype and genotype supplements.
+ICGT cacao phenotype supplement	S2 phenotype workbook	https://journals.plos.org/plosone/article/file?type=supplementary&id=10.1371/journal.pone.0260907.s002	Used for cacao flower, fruit, seed and yield-related phenotypes.
+ICGT cacao genotype supplement	S10 genotype table	https://journals.plos.org/plosone/article/file?type=supplementary&id=10.1371/journal.pone.0260907.s010	Used for cacao SNP genotype matrix.
+Agrosavia cacao GWAS article	G3 article	https://academic.oup.com/g3journal/article/10/5/1713/6026284	Source article for cacao productivity and disease phenotypes.
+Agrosavia cacao supplemental data	Figshare article file API	https://api.figshare.com/v2/articles/10028999/files	Used to obtain phenotype workbooks and Matina/Criollo VCF files.
+Coffee genomic prediction data	Dryad landing page	https://datadryad.org/dataset/doi:10.5061/dryad.1139fm7	Public data record associated with Ferrão et al. (2019), Heredity.
+Coffee genomic prediction data mirror	Zenodo record	https://zenodo.org/records/5013364	Mirror used when direct Dryad file-stream access is unavailable.
+Cacao 219-SNP panel	Beverage Plant Research article	https://www.maxapress.com/article/doi/10.48130/BPR-2021-0015	Source for cacao low-density identity panel metadata.
+West Africa cacao KASP study	Agronomy article	https://www.mdpi.com/2073-4395/14/11/2458	Used as a low-density KASP-SNP identity-audit case study.

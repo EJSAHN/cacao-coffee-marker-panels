@@ -1,0 +1,11 @@
+Dataset	Required file	Expected relative location	Purpose
+ICGT cacao	S02 phenotype workbook	data/raw/cacao_icgt_plos2022/S02_phenotype_346_accessions.xlsx	Flower, fruit, seed and yield-related phenotypes
+ICGT cacao	S10 genotype table	data/raw/cacao_icgt_plos2022/S10_genotype_data_for_gwas.txt	HapMap-like SNP genotypes
+Agrosavia cacao	File S1-S4 workbooks	data/raw/cacao_agrosavia_g3_2020/figshare_files/	Accession and phenotype metadata
+Agrosavia cacao	Matina VCF	data/raw/cacao_agrosavia_g3_2020/figshare_files/File_S6_matina.vcf	GBS genotypes aligned to Matina reference
+Agrosavia cacao	Criollo VCF	data/raw/cacao_agrosavia_g3_2020/figshare_files/File_S5_criollo.vcf	GBS genotypes aligned to Criollo reference
+Cacao SNP panel	219-SNP panel workbook	data/raw/cacao_identity_panels/BPR2021_S2_snp_information_selected_loci.xlsx	Low-density identity panel metadata
+Coffee	Intermediate SNP CSV	data/raw/coffee_canephora_dryad2018/unzipped/data_set/Pop_Int_SNPdata.csv	GBS marker matrix
+Coffee	Intermediate phenotype CSV	data/raw/coffee_canephora_dryad2018/unzipped/data_set/Pop_Int_PHENOdata.csv	Production, rust and green bean phenotypes
+Coffee	Precocious SNP CSV	data/raw/coffee_canephora_dryad2018/unzipped/data_set/Pop_Prec_SNPdata.csv	GBS marker matrix
+Coffee	Precocious phenotype CSV	data/raw/coffee_canephora_dryad2018/unzipped/data_set/Pop_Prec_PHENOdata.csv	Production, rust and green bean phenotypes
