@@ -1,5 +1,17 @@
 # cacao-coffee-marker-panels
 
+> **Development branch: reporting component only.** The new
+> [`scripts/prediction_reporting.py`](scripts/prediction_reporting.py) summarizes
+> stored predictions without fitting models. See
+> [the reporting contract](docs/PREDICTION_REPORTING.md) and
+> [known version 1 input issues](CHANGELOG.md).
+> The analysis commands below are retained version 1 documentation. The legacy
+> ICGT reader and model drivers are **not** the corrected version 2 pipeline and
+> must not be used to reproduce the revised study. No version 2 release is
+> declared on this branch.
+
+## Retained version 1 documentation
+
 Reproducible Python pipeline for identity-aware genomic prediction and low-density SNP panel evaluation in public cacao and coffee breeding datasets.
 
 This repository contains table-oriented Python code for integrating public cacao and coffee genotype-phenotype resources. The workflow harmonizes genotype and phenotype matrices, audits sample identity and population structure, builds population-aware validation splits, benchmarks prediction models, and evaluates marker-panel size effects.
