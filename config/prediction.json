@@ -1,0 +1,59 @@
+{
+  "seed": 20261116,
+  "sample_missing_max": 0.2,
+  "marker_missing_max": 0.2,
+  "maf_min": 0.01,
+  "variance_min": 1e-12,
+  "similarity_threshold": 0.985,
+  "minimum_pair_overlap": 50,
+  "minimum_pair_overlap_fraction": 0.5,
+  "pca_components": 10,
+  "cluster_candidates": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "kmeans_n_init": 50,
+  "outer_min_train": 20,
+  "outer_min_test": 5,
+  "inner_min_train": 10,
+  "inner_min_test": 3,
+  "inner_folds": 3,
+  "random_cv_repeats": 10,
+  "panel_sizes": [
+    45,
+    219,
+    500
+  ],
+  "random_panel_draws": 1,
+  "lambda_grid": [
+    0.0001,
+    0.00031622776601683794,
+    0.001,
+    0.0031622776601683794,
+    0.01,
+    0.03162277660168379,
+    0.1,
+    0.31622776601683794,
+    1.0,
+    3.1622776601683795,
+    10.0,
+    31.622776601683793,
+    100.0,
+    316.22776601683796,
+    1000.0,
+    3162.2776601683795,
+    10000.0
+  ],
+  "schemes": [
+    "random5",
+    "identity_grouped5",
+    "cluster_out"
+  ],
+  "clustering_pc_count": 5,
+  "scaling": "center_only"
+}

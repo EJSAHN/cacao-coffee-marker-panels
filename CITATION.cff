@@ -1,13 +1,9 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it using the metadata below."
+message: "Cite the immutable reviewed commit used; this is a release candidate, not a tagged release."
 title: "cacao-coffee-marker-panels"
 type: software
 authors:
   - family-names: Ahn
     given-names: Ezekiel
-version: 1.0.0
-date-released: 2026-06-25
-url: "https://github.com/EJSAHN/cacao-coffee-marker-panels"
+version: 2.0.0rc1
 repository-code: "https://github.com/EJSAHN/cacao-coffee-marker-panels"
-abstract: >-
-  Reproducible Python pipeline for identity-aware genomic prediction and low-density SNP panel evaluation in public cacao and coffee breeding datasets.

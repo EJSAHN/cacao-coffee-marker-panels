@@ -1,35 +1,65 @@
 # Workflow
 
-The pipeline is designed to produce tabular outputs from public genotype-phenotype resources.
+## Input preparation
 
-## 1. Raw-file inventory
+The ICGT reader excludes wholly empty records and interprets observed diploid
+calls when allele-description metadata are `*`. The inferred alphabet is an
+analysis coding convention, not a genomic REF/ALT or strand assignment. Ambiguous
+sample matches fail; multiple genotype records for a named accession use the
+preserved exact-name/match-rank/source-ID rule and are documented for sensitivity.
+The Agrosavia reader uses the published TOTAL/summary target rows. Matina and
+Criollo are two genotype representations of the same phenotyped collection.
+Coffee continuous source genotypes are shifted from [-1,1] to [0,2], never rounded.
+The source-adjusted FEM targets are used. FES is not substituted or averaged in.
 
-`01_inventory_raw_data.py` checks expected files, records file sizes and table dimensions, and extracts VCF sample counts and variant counts.
+## Genotype-only design
 
-## 2. Genotype-phenotype harmonization
+The 20% sample-missingness gate determines primary cohorts. PCA and cluster
+construction retain the empirical-SD scaling used to freeze the original design.
+Prediction is a separate operation, primarily using center-only marker dosage.
+High-similarity connected components define a group-aware random partition; they
+are not confirmed clones. The same primary memberships are inherited by declared-
+allele and discordant-source-ID sensitivity cohorts.
 
-`02_clean_and_harmonize.py` converts source-specific genotype formats into sample-by-marker matrices and writes matched phenotype tables. Cacao VCF calls are converted to alternate-allele dosage. Coffee SNP coding is retained in cleaned matrices and converted to dosage in downstream QC steps when needed.
+## Prediction and density
 
-## 3. Identity and structure audit
+All training-derived marker filters, imputation, centering/scaling, F-ranking and
+penalty tuning are refit within inner training splits. Outer test outcomes enter
+only evaluation. Random and identity-grouped five-fold designs are repeated ten
+times; the fixed cluster-out design is evaluated once. Panels too large for the
+eligible marker set are unavailable, not silently truncated to a smaller assay.
+Core panels are evaluated under both genotype scalings. The expanded density and
+additional model comparisons use center-only scaling on the five primary genotype
+representations. Family comparisons share a maximum 1,000-marker training-only
+screen, alongside the full-marker ridge and mean/PC baselines. Every ordered
+candidate grid and tie rule is in `config/study.json` or its numerical implementation.
 
-`03_identity_structure_qc.py` applies recorded missingness and MAF filters, runs PCA, assigns K-means clusters, computes missing-aware genotype similarity, identifies high-similarity sample pairs and creates validation split tables.
+## Supplementary analyses
 
-## 4. Prediction benchmark
+Genomic variance uses phenotype-blind full, random and high-MAF marker sets.
+The fixed PC covariates are from the full centered genotype matrix for both
+kernel scalings. Estimates describe the supplied adjusted/aggregated targets;
+profile-likelihood support ranges and boundary estimates must be retained.
+QC and representative-member sensitivities inherit primary splits.
+Size-matched evaluation uses the same outer evaluation pool and a common random
+inner rule. The separate tuning diagnostic holds outer samples fixed while
+comparing inner membership, sample-size matching and MSE weighting. It does not
+select the best outer-test design as a new primary analysis.
 
-`04_prediction_benchmarks.py` compares mean baseline, ridge regression, elastic net, random forest and gradient boosting under random five-fold and cluster-out validation. Feature processing is performed inside each training fold.
+## Reporting and exports
 
-## 5. Prediction summary
+The reporting layer is independent of fitting. It retains repeats separately,
+uses common eligible folds for paired correlation summaries, and keeps all valid
+observations for error metrics. `compare-predictions` restricts two procedures to
+their common test IDs; differing cluster partitions are identified, not hidden.
+This comparison does not isolate a causal reference-genome effect.
+Marker overlap is descriptive, not final-panel selection. TSVs retain precision;
+Excel is a bounded, readable export. Fixed SNP sets, inner-selected procedures and
+post-evaluation best observations must remain distinguishable.
 
-`04b_summarize_prediction_results.py` identifies the best model for each dataset, trait and validation scheme, summarizes performance loss from random five-fold to cluster-out validation, and writes compact shortlist tables.
+## Preservation
 
-## 6. Marker-panel simulation
-
-`05_marker_panel_simulation.py` evaluates 20, 45, 96, 219, 500 and 1000 SNP panels using ridge regression. Random panels are repeated. High-MAF panels and ANOVA-F selected panels are selected inside each training fold.
-
-## 7. Panel versus full-marker comparison
-
-`05b_panel_vs_full_ridge_digest.py` compares the best low-density panel result against the full-marker ridge benchmark and identifies minimum panel sizes reaching user-defined fractions of the full-marker ridge benchmark.
-
-## 8. Workbook export
-
-`06_export_analysis_workbook.py` combines key output tables into `analysis/outputs/analysis_workbook.xlsx`.
+Existing source folders and results are read-only. New results are separate.
+Phase checkpoint reuse requires matching signatures and output hashes. A missing
+upstream checkpoint is an error, not a failed scientific result. No remote operation
+is performed by an analysis command.

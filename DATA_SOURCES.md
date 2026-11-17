@@ -1,31 +1,24 @@
-# Data sources
+# Data sources and target definitions
 
-Raw data are public but are not redistributed in this repository. The expected local file layout is listed in `config/input_files_expected.tsv`.
+Third-party data are not redistributed in this repository. Obtain the provider
+files and comply with their access and reuse conditions. Code licensing does not
+supply a license for those files.
 
-## ICGT cacao
+| Resource | Public identifier | Required source inputs | Analysis target |
+|---|---|---|---|
+| Bekele et al. (2022), ICGT cacao | https://doi.org/10.1371/journal.pone.0260907 | S2 phenotype XLSX and S10 HapMap-like TXT | The supplied accession-level floral, seed and pod traits |
+| Osorio-Guarín et al. (2020), Agrosavia cacao | https://api.figshare.com/v2/articles/10028999 | File S2 XLS, File S5 Criollo VCF, File S6 Matina VCF | Published summary rows for productivity and disease AUDPC |
+| Ferrão et al. (2019), Coffea canephora | https://zenodo.org/records/5013364 | Pop_Int/Pop_Prec SNPdata and PHENOdata CSVs from data_set.zip | Source-adjusted FEM production, rust and green-bean targets |
 
-- **Source:** Bekele et al. 2022, PLOS ONE, genome-wide association and genomic selection analysis of International Cocoa Genebank Trinidad accessions.
-- **Used here:** phenotype workbook and HapMap-like SNP genotype table.
-- **Files:** PLOS ONE supplementary S2 and S10.
+The source manifest uses exact file paths, not the download URL. Source checksums
+are recorded during decoding. Keep original README files with downloaded data.
+Do not assume fold-specific upstream imputation or phenotype adjustment: this
+pipeline controls its own training-only processing, not the original providers'
+prior processing. Noninteger genotype values are preserved. Two reference mappings
+of Agrosavia are not independent phenotype cohorts.
 
-## Agrosavia cacao
-
-- **Source:** Osorio-Guarín et al. 2020, G3, cacao productivity and disease-resistance analysis.
-- **Used here:** supplemental phenotype workbooks and VCF files aligned to Matina and Criollo references.
-- **Files:** Figshare supplemental files S1-S6.
-
-## Coffea canephora
-
-- **Source:** Ferrão et al. 2019, *Heredity*, genomic prediction dataset for two *Coffea canephora* recurrent-selection populations (https://doi.org/10.1038/s41437-018-0105-y).
-- **Used here:** SNP matrices and phenotype tables for production, leaf rust incidence and green bean yield.
-- **Files:** `Pop_Int_SNPdata.csv`, `Pop_Int_PHENOdata.csv`, `Pop_Prec_SNPdata.csv`, and `Pop_Prec_PHENOdata.csv`.
-
-## Cacao low-density SNP panel metadata
-
-- **Source:** Gutiérrez et al. 2021, cacao 219-SNP identity and origin assignment panel.
-- **Used here:** marker metadata for low-density cacao panel context.
-
-## West Africa cacao KASP-SNP study
-
-- **Source:** Bhattacharjee et al. 2024, Agronomy, Sierra Leone and Togo cacao germplasm fingerprinting with 20 KASP-SNPs.
-- **Used here:** conceptual motivation for identity audit and low-density marker deployment. The pipeline itself does not require the raw KASP-SNP matrix from this study.
+`config/sources.example.json` maps files to their roles. The two small cacao marker
+resources used as background in the study are not training matrices or independent
+validation datasets, and are not required to execute the revised prediction code.
+Redistribution of matched data for a public data archive requires a separate
+provider-rights review. No data DOI or deposit is claimed by this code candidate.

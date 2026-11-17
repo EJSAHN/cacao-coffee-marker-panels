@@ -1,17 +1,11 @@
-# Raw data and generated outputs
-data/raw/
+data/
+outputs/
 analysis/
-
-# Python
 __pycache__/
 *.py[cod]
-.ipynb_checkpoints/
-
-# Environments
-.venv/
-env/
 *.egg-info/
-
-# System files
+.venv/
+.env
+.ipynb_checkpoints/
 .DS_Store
 Thumbs.db
