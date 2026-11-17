@@ -1,9 +1,8 @@
 # Reporting stored predictions
 
 This reporting component evaluates existing out-of-fold predictions. It does not
-fit, recalibrate, rank, or select prediction models. It is independent of the
-legacy analysis launcher. Integration of the corrected readers and complete
-analysis drivers is not complete; this branch is not a full version 2 release.
+fit, recalibrate, rank, or select prediction models. The study drivers call the same reporting implementation. Integration tests and
+remaining platform limits are recorded in VALIDATION.md.
 
 ## Input and execution
 
@@ -35,8 +34,8 @@ python scripts/prediction_reporting.py --input predictions.tsv --output reportin
 The output directory must not exist. The script writes `fold_metrics.tsv`,
 `summary.tsv`, and `report.json`. On failure, `INCOMPLETE.txt` remains and no
 completed report is certified. Input bytes are hashed before and after reading.
-There are no downloads, dependency installations, or remote operations. Current
-outputs are TSV and JSON; consolidated workbook export is not part of this change.
+There are no downloads, dependency installations, or remote operations. Outputs are TSV and JSON. The separate export-workbook command creates an Excel
+view without changing the numerical definitions.
 
 ## Within-fold association and coverage
 

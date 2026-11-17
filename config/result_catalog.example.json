@@ -1,0 +1,17 @@
+{
+  "title": "Cacao and coffee analysis results",
+  "tables": [
+    {
+      "label": "Prediction summary",
+      "path": "../study_output/reporting/prediction_repeat_summary.tsv",
+      "filename": "prediction_repeat_summary.tsv",
+      "workbook": true
+    },
+    {
+      "label": "Variance components",
+      "path": "../study_output/variance/variance_components.tsv",
+      "filename": "variance_components.tsv",
+      "workbook": true
+    }
+  ]
+}

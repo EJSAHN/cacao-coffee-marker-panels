@@ -1,133 +1,108 @@
 # cacao-coffee-marker-panels
 
-> **Development branch: reporting component only.** The new
-> [`scripts/prediction_reporting.py`](scripts/prediction_reporting.py) summarizes
-> stored predictions without fitting models. See
-> [the reporting contract](docs/PREDICTION_REPORTING.md) and
-> [known version 1 input issues](CHANGELOG.md).
-> The analysis commands below are retained version 1 documentation. The legacy
-> ICGT reader and model drivers are **not** the corrected version 2 pipeline and
-> must not be used to reproduce the revised study. No version 2 release is
-> declared on this branch.
+Genomic prediction, marker-density comparisons, and validation-design sensitivity
+for public cacao and coffee genotype–phenotype resources.
 
-## Retained version 1 documentation
+**Version 2.0.0rc1 is a code-review candidate, not a tagged release.** It connects
+the source-specific readers, preserved numerical implementations, study drivers,
+and tabular reporting. The approved study results are not overwritten by running
+this code. See [validation scope](docs/VALIDATION.md) and [changes from version 1](CHANGELOG.md).
 
-Reproducible Python pipeline for identity-aware genomic prediction and low-density SNP panel evaluation in public cacao and coffee breeding datasets.
+## Existing environment
 
-This repository contains table-oriented Python code for integrating public cacao and coffee genotype-phenotype resources. The workflow harmonizes genotype and phenotype matrices, audits sample identity and population structure, builds population-aware validation splits, benchmarks prediction models, and evaluates marker-panel size effects.
+Python 3.10 or later, NumPy, SciPy, pandas, scikit-learn, openpyxl and xlrd are
+required. `requirements.txt` gives supported ranges; `requirements-reproduction.txt`
+records the versions used in the original Windows analysis. Do not upgrade a
+working shared environment merely to run this repository. No command installs
+packages, downloads source data, or modifies remote repositories.
 
-## What this repository does
-
-1. Checks that the expected public input files are present.
-2. Converts cacao and coffee genotype files into matched numeric matrices.
-3. Audits genotype missingness, minor allele frequency, genetic structure, and high-similarity sample pairs.
-4. Compares conventional random five-fold validation with genetic cluster-out validation.
-5. Benchmarks full-marker prediction models.
-6. Simulates low-density SNP panels under training-fold marker selection.
-7. Exports tabular summaries and a single analysis workbook.
-
-## Repository layout
+Run from the repository directory; editable installation is not necessary:
 
 ```text
-config/
-  input_files_expected.tsv        Expected public input files and relative locations
-resources/
-  public_data_sources.tsv         Public source links for the input data
-scripts/
-  run_all.py                      Full workflow launcher
-  01_inventory_raw_data.py        Raw-file inventory and table dimension checks
-  02_clean_and_harmonize.py       Genotype and phenotype harmonization
-  03_identity_structure_qc.py     Missingness, MAF, PCA, clusters, similarity audit
-  04_prediction_benchmarks.py     Full-marker prediction benchmarks
-  04b_summarize_prediction_results.py
-                                  Prediction summary tables
-  05_marker_panel_simulation.py   Low-density SNP panel simulations
-  05b_panel_vs_full_ridge_digest.py
-                                  Panel versus full-marker ridge comparison
-  06_export_analysis_workbook.py  Multi-sheet analysis workbook export
-src/
-  tropical_perennial_breeding/    Small shared helpers and label dictionaries
+python run.py verify-input --data matched/icgt_cacao
+python -m unittest discover -s tests -v
 ```
 
-## Input data
+## Two reproducibility routes
 
-Raw data are not redistributed here. Download the public files described in `DATA_SOURCES.md` and place them under the relative paths listed in `config/input_files_expected.tsv`.
+### 1. Recorded matched inputs and partitions
 
-A project folder should have this structure before the pipeline is run:
+Use the supplied matched dosage matrices, source target values, sample/marker IDs,
+and recorded validation assignments. This preserves the study cohorts and splits.
 
 ```text
-project_folder/
-  data/raw/
-    cacao_icgt_plos2022/
-    cacao_agrosavia_g3_2020/
-    cacao_identity_panels/
-    coffee_canephora_dryad2018/
+python run.py import-matched --input supplied_matched_inputs --out matched
+python run.py import-screens --input supplied_model_checkpoints --matched matched --out model_screens
+python run_study.py --input matched --config config/study.json --out study_output --recorded-screens model_screens/index.json
 ```
 
-## Installation
+`import-screens` is optional for new analyses. For replay of stochastic models it
+preserves the recorded **training-only** F-ranking order. Near-tied scores can
+otherwise reorder columns across numerical backends, changing a tree's random
+feature draws. It does not insert fitted predictions or use held-out phenotypes.
+Its IDs, eligibility and input hashes are checked. See [reproduction inputs](docs/INPUTS.md).
 
-Use an existing Python environment or create one from the included environment file.
+### 2. Source files to new matched inputs
 
-```bash
-conda env create -f environment.yml
-conda activate cacao-coffee-marker-panels
-```
-
-A minimal pip-based setup is also provided.
-
-```bash
-pip install -r requirements.txt
-```
-
-## Run the workflow
-
-From the repository root:
-
-```bash
-python scripts/run_all.py --project-root /path/to/project_folder
-```
-
-A faster run for checking installation and input layout is available:
-
-```bash
-python scripts/run_all.py --project-root /path/to/project_folder --quick
-```
-
-On Windows, from Anaconda Prompt:
-
-```bat
-run_pipeline.bat C:\path\to\project_folder
-```
-
-## Main outputs
-
-The pipeline writes outputs into the user-specified project folder:
+Obtain the provider files in [DATA_SOURCES.md](DATA_SOURCES.md); fill in the explicit
+paths in a copy of `config/sources.example.json`. No result is selected by filename
+recency. Outputs must be outside the source folders.
 
 ```text
-analysis/intermediate/        Cleaned matrices, QC tables, PCA/clusters and validation splits
-analysis/outputs/             Prediction tables, marker-panel tables and analysis workbook
-analysis/logs/                Runtime logs
+python run.py prepare --sources sources.json --out decoded
+python run.py design --matrices decoded --config config/study.json --out matched_new
+python run_study.py --input matched_new --config config/study.json --out study_output_new
 ```
 
-The final workbook is written to:
+This route recomputes genotype-only structure and partitions. Library versions and
+floating-point near-ties may affect regenerated memberships and stochastic-model
+feature order. The recorded-partition route is the reference for the reported
+study. Source positions whose units are uncertain are not treated as base pairs.
+
+## Existing results without refitting
+
+An explicit catalog lists table paths and optional SHA-256 values:
 
 ```text
-analysis/outputs/analysis_workbook.xlsx
+python run.py collect-results --catalog result_catalog.json --out result_export
 ```
 
-## Validation design
+The command copies tables and creates `analysis_summary.xlsx`. It does not refit,
+reselect, recalibrate or reinterpret models. Large tables may be excluded from
+Excel explicitly with `"workbook": false`; they remain in the TSV export. Sheets
+exceeding the Excel row limit are split, never silently truncated.
 
-The workflow reports two complementary validation schemes:
+## Separate analysis commands
 
-- **Random five-fold validation:** conventional baseline for comparison with prior genomic prediction studies.
-- **Cluster-out validation:** genetic clusters are withheld as test sets to evaluate prediction across population structure.
+`predict-study`, `variance-study`, `qc-sensitivity`, `size-matched`, and
+`tuning-diagnostic` use the same implementations as `run_study.py`.
+`summarize-study`, `compare-predictions`, `marker-stability`, and `export-workbook`
+operate on saved outputs. Use `python run.py COMMAND --help` for arguments.
+`--max-tasks` produces a **limited test**, not a complete study. `--resume` checks
+input, settings, code and completed checkpoint hashes before reuse.
 
-Marker panels selected by ANOVA-F are selected only within each training fold. They should be interpreted as trait-specific candidate panels for marker-density evaluation, not as finalized assays.
+## Interpretation
 
-## Citation
+The main reporting pair is descriptive within-fold Pearson correlation (Fisher-z,
+weight n−3, with eligible sample/fold coverage) and error skill relative to the
+training mean. Pooled correlations and within/between covariance contributions
+remain diagnostics. Constant or numerically unresolved correlations are undefined,
+not zero; their observations remain in error calculations. Repartitioning SD is
+not an independent-sample confidence interval. No fixed assay or realized breeding
+gain is validated by these simulations.
 
-Please cite the public release as:
+## Layout
 
-Ahn, E. (2026). *cacao-coffee-marker-panels* (Version 1.0.0) [Computer software]. GitHub. https://github.com/EJSAHN/cacao-coffee-marker-panels
+```text
+config/                     Explicit source and study settings
+src/cacao_coffee_panels/     Readers, numerical kernels, drivers and exporters
+scripts/prediction_reporting.py  Stored-prediction reporting entry point
+run.py                      Command-line entry point
+run_study.py                Ordered study execution with phase checkpoints
+tests/                      Unit and interface tests
+docs/                       Input contracts, reporting definitions and validation scope
+```
 
-Machine-readable citation metadata are provided in `CITATION.cff`.
+No source data or generated results are bundled. Outputs are written only to the
+user-specified destination. The MIT license applies to the code, not third-party
+data. Record the immutable commit or reviewed release used for each analysis.

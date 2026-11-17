@@ -1,0 +1,42 @@
+[
+  {
+    "module": "cohorts.py",
+    "sha256": "c0660dd8d155e14b863416412a1716fd14ac44036791015fe034396ad446ccff",
+    "role": "preserved_numerical_kernel"
+  },
+  {
+    "module": "io.py",
+    "sha256": "c3ba8016fbe4e0cbada1489794c28d9fc8437519d0f3ee6c196bde514d6c375a",
+    "role": "preserved_numerical_kernel"
+  },
+  {
+    "module": "models.py",
+    "sha256": "04fb16de8d54eb3b5e6936c437c4f76d42f4ba1ac64a5b4b96879df68c334474",
+    "role": "preserved_numerical_kernel"
+  },
+  {
+    "module": "panels.py",
+    "sha256": "7834bc56ee278930efcbeeb45627be8f3da4bda927b7bd3ea8d6f4895a3fc11f",
+    "role": "preserved_numerical_kernel"
+  },
+  {
+    "module": "ridge.py",
+    "sha256": "e81bcbbdc4df5e2ada2e0268db952d27396b4691e3037663bea5ca2c60518209",
+    "role": "preserved_numerical_kernel"
+  },
+  {
+    "module": "size_match.py",
+    "sha256": "3b93f21ab09ac8a4d689689efa2ce2ac6ce99db7b043c2582f4088bd45d6ad1d",
+    "role": "preserved_numerical_kernel"
+  },
+  {
+    "module": "tuning.py",
+    "sha256": "c3e046f2ffce8559d1b4bfe61b4100f95a5c53d749caa1772a9a6125d216d964",
+    "role": "preserved_numerical_kernel"
+  },
+  {
+    "module": "variance.py",
+    "sha256": "a415697ab6d1c17e65315eed4d02d4948dfb0814ab3f414b9a75e268b132f741",
+    "role": "preserved_numerical_kernel"
+  }
+]

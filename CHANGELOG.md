@@ -1,35 +1,45 @@
 # Changelog
 
-## Unreleased — reporting component under review
+## 2.0.0rc1 — integrated code-review candidate
 
-### Added
+- Connect source decoding, recorded matched inputs, fixed partitions, prediction,
+  density comparisons, variance components and validation sensitivities.
+- Preserve the eight established numerical kernels; expose portable study drivers
+  and explicit input/configuration contracts rather than personal filesystem paths.
+- Report within-fold correlations with coverage and training-mean MSE skill;
+  retain pooled covariance diagnostics. The reporting decision followed inspection
+  of earlier results and is not preregistration. Models are not reselected using
+  the new reporting metrics.
+- Exclude numerically unresolved correlations only from correlation summaries.
+  Their observations and errors are retained. Small resolved prediction variation
+  is not excluded merely because the fitted model is strongly shrunk.
+- Add recorded training-only screen replay for stochastic models. Near-tied
+  floating-point scores can change feature order across backends; archived screen
+  order is an explicit input checked against cohort and train/test identities.
+- Export paired comparisons, marker stability, read-only result catalogs and
+  multisheet workbooks. No source data or generated outputs are embedded.
 
-- A standalone reader for stored out-of-fold predictions, with fold-specific
-  correlations, descriptive Fisher-z summaries, explicit coverage, training-mean
-  MSE skill, and pooled within/between covariance diagnostics.
-- Numerical-precision guards for correlations on almost constant predictions.
-  Observations and errors are retained; predictions are not modified.
-- Input validation, read-only hashes, tests, and an explicit reporting contract.
+### Corrections relative to version 1.0.0
 
-### Known issue in version 1.0.0
+The ICGT reader included wholly empty source records as marker rows and discarded
+valid observed genotype calls when the allele-description field was `*`. The
+asterisk was metadata and did not by itself denote missing calls. This inflated
+missingness and altered sample/marker filtering. Affected ICGT matrices and analyses
+were reconstructed; changing only labels or a missingness percentage is insufficient.
 
-The ICGT input reader treated wholly empty source records as markers and treated
-valid observed genotype calls as missing when the allele-description field was
-`*`. The asterisk was metadata, not necessarily a missing genotype call. These
-behaviors inflated missingness and changed downstream marker/sample filtering.
-Affected ICGT matrices and downstream analyses must be reconstructed; relabeling
-legacy results or changing only the reported missingness percentage is insufficient.
+Full-marker and panel ridge tuning and minimum evaluation-fold sizes previously
+differed. Revised comparisons use matched evaluation records and explicit common
+rules. Coffee targets are explicitly the source-adjusted FEM records, not a two-
+environment mean. Continuous genotype values remain unrounded. Center-only primary
+scaling follows the diagnosis of unstable predictions caused by extremely small
+observed training standard deviations; allele-frequency scaling is retained as a
+sensitivity. These changes do not imply all original low-density improvements were
+reproduced.
 
-The corrected analytical results are maintained separately. This reporting-only
-change does not fix the legacy reader or replace the legacy model drivers. The
-remaining source-reader and analysis-driver integration must be reviewed before
-a complete version 2 release. Existing version 1 commits and tags are preserved;
-this branch does not overwrite earlier results or create a release tag.
+### Release scope
 
-### Reporting scope
-
-The within-fold correlation reporting decision was made after diagnostic review
-of existing results. It is not preregistered and does not turn reused validation
-samples into independent external validation. Fixed procedures and training-only
-model selection remain distinct; new reporting metrics do not retune or reselect
-models. This change contains no completed manuscript, private data, or rendering code.
+This is not a published/tagged version 2 release. Validation covers the documented
+readers, numerical kernels and representative integrated fits, not an all-model,
+all-fold raw-data rerun on every supported platform. Earlier commits and tags must
+be preserved. The candidate does not overwrite approved result tables or claim
+external population validation.

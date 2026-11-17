@@ -1,0 +1,8 @@
+# Recorded Windows analysis versions; do not install over an existing working environment automatically.
+numpy==2.2.6
+scipy==1.15.2
+pandas==2.3.3
+scikit-learn==1.7.2
+openpyxl==3.1.5
+xlrd==2.0.2
+threadpoolctl==3.6.0

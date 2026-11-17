@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "seed": 20261116,
+  "baseline": {
+    "seed": 20261116,
+    "sample_missing_max": 0.2,
+    "marker_missing_max": 0.2,
+    "maf_min": 0.01,
+    "variance_min": 1e-12,
+    "similarity_threshold": 0.985,
+    "minimum_pair_overlap": 50,
+    "minimum_pair_overlap_fraction": 0.5,
+    "pca_components": 10,
+    "cluster_candidates": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "kmeans_n_init": 50,
+    "outer_min_train": 20,
+    "outer_min_test": 5,
+    "inner_min_train": 10,
+    "inner_min_test": 3,
+    "inner_folds": 3,
+    "random_cv_repeats": 10,
+    "panel_sizes": [
+      45,
+      219,
+      500
+    ],
+    "random_panel_draws": 1,
+    "lambda_grid": [
+      0.0001,
+      0.00031622776601683794,
+      0.001,
+      0.0031622776601683794,
+      0.01,
+      0.03162277660168379,
+      0.1,
+      0.31622776601683794,
+      1.0,
+      3.1622776601683795,
+      10.0,
+      31.622776601683793,
+      100.0,
+      316.22776601683796,
+      1000.0,
+      3162.2776601683795,
+      10000.0
+    ],
+    "schemes": [
+      "random5",
+      "identity_grouped5",
+      "cluster_out"
+    ],
+    "icgt_sensitivities": [
+      "declared_alleles_only",
+      "exclude_discordant_names"
+    ],
+    "phenotype_policy": "source_summary_for_agrosavia_FEM_for_coffee_no_mean_replacement",
+    "clustering_pc_count": 5,
+    "scaling": "center_only"
+  },
+  "scaling_modes": [
+    "center_only",
+    "allele_frequency"
+  ],
+  "panel": {
+    "extended_sizes": [
+      20,
+      45,
+      96,
+      219,
+      500,
+      1000,
+      2000,
+      5000
+    ],
+    "core_sizes": [
+      45,
+      219,
+      500
+    ]
+  },
+  "models": {
+    "baseline": {
+      "seed": 20261116,
+      "sample_missing_max": 0.2,
+      "marker_missing_max": 0.2,
+      "maf_min": 0.01,
+      "variance_min": 1e-12,
+      "similarity_threshold": 0.985,
+      "minimum_pair_overlap": 50,
+      "minimum_pair_overlap_fraction": 0.5,
+      "pca_components": 10,
+      "cluster_candidates": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "kmeans_n_init": 50,
+      "outer_min_train": 20,
+      "outer_min_test": 5,
+      "inner_min_train": 10,
+      "inner_min_test": 3,
+      "inner_folds": 3,
+      "random_cv_repeats": 1,
+      "panel_sizes": [
+        45,
+        219,
+        500
+      ],
+      "random_panel_draws": 1,
+      "lambda_grid": [
+        0.0001,
+        0.00031622776601683794,
+        0.001,
+        0.0031622776601683794,
+        0.01,
+        0.03162277660168379,
+        0.1,
+        0.31622776601683794,
+        1.0,
+        3.1622776601683795,
+        10.0,
+        31.622776601683793,
+        100.0,
+        316.22776601683796,
+        1000.0,
+        3162.2776601683795,
+        10000.0
+      ],
+      "schemes": [
+        "random5",
+        "identity_grouped5",
+        "cluster_out"
+      ],
+      "icgt_sensitivities": [
+        "declared_alleles_only",
+        "exclude_discordant_names"
+      ],
+      "phenotype_policy": "source_summary_for_agrosavia_FEM_for_coffee_no_mean_replacement",
+      "clustering_pc_count": 5
+    },
+    "scaling": "center_only",
+    "random_cv_repeats": 10,
+    "cohorts": [
+      "icgt_cacao__primary_q20",
+      "agrosavia_matina__primary_q20",
+      "agrosavia_criollo__primary_q20",
+      "coffee_int__primary_q20",
+      "coffee_prec__primary_q20"
+    ],
+    "shared_screen": {
+      "method": "training_f_regression",
+      "max_markers": 1000,
+      "tie_break": "lexicographic_marker_id",
+      "size_policy": "min(1000,number_of_eligible_training_markers); effective size saved; this is a model-comparison feature budget, not a fixed 1000-SNP assay"
+    },
+    "new_models": [
+      "screened_ridge",
+      "elastic_net",
+      "random_forest",
+      "gradient_boosting"
+    ],
+    "parent_models": [
+      "full_ridge",
+      "pc_ridge",
+      "mean"
+    ],
+    "model_selection_candidates": [
+      "full_ridge",
+      "screened_ridge",
+      "elastic_net",
+      "random_forest",
+      "gradient_boosting"
+    ],
+    "elastic_net": {
+      "l1_ratios": [
+        0.1,
+        0.5,
+        0.9
+      ],
+      "alpha_fractions": [
+        1.0,
+        0.1,
+        0.01
+      ],
+      "max_iter": 5000,
+      "retry_max_iter": 20000,
+      "tol": 1e-05,
+      "selection": "cyclic",
+      "target_scale": "training_SD_ddof0",
+      "alpha_policy": "fraction * max(abs(X.T y_standardized))/(n*l1_ratio), lower bound 1e-12; recomputed on each training split"
+    },
+    "random_forest": {
+      "n_estimators": 200,
+      "max_features": "sqrt",
+      "min_samples_leaf": [
+        2,
+        5
+      ],
+      "max_depth": null,
+      "bootstrap": true,
+      "n_jobs": 1
+    },
+    "gradient_boosting": {
+      "n_estimators": 150,
+      "learning_rate": 0.05,
+      "max_depth": [
+        1,
+        2
+      ],
+      "min_samples_leaf": 3,
+      "max_features": "sqrt",
+      "subsample": 0.85,
+      "loss": "squared_error",
+      "n_iter_no_change": null
+    },
+    "inner_tuning": "pooled_validation_squared_error_in_original_phenotype_units; use frozen preserved inner splits and fit QC/imputation/centering/F-screen separately in each inner training subset",
+    "grid_tie_break": "first config in ordered grids; ridge grid same strongest-penalty tie break as existing engine",
+    "seed": 20261116
+  },
+  "variance": {
+    "seed": 20261116,
+    "marker_missing_max": 0.2,
+    "maf_min": 0.01,
+    "variance_min": 1e-12,
+    "panel_sizes": [
+      45,
+      219,
+      500,
+      1000,
+      2000,
+      5000
+    ],
+    "random_panel_draws": 3,
+    "kernel_scalings": [
+      "center_only",
+      "allele_frequency"
+    ],
+    "fixed_designs": [
+      "intercept",
+      "intercept_pc5"
+    ],
+    "pc_count": 5,
+    "h_upper": 0.99999999,
+    "profile_grid_points": 201,
+    "lr_support_cutoff": 3.841458820694124,
+    "primary_scaling": "center_only",
+    "boundary_interpretation": "Approximate profile-likelihood support, not a guaranteed-coverage interval or field-scale heritability"
+  },
+  "size_match": {
+    "seed": 20261117,
+    "random_repeats": 10,
+    "models": [
+      "full_ridge",
+      "mean"
+    ],
+    "baseline": {
+      "marker_missing_max": 0.2,
+      "maf_min": 0.01,
+      "variance_min": 1e-12,
+      "outer_min_train": 20,
+      "outer_min_test": 5,
+      "inner_min_train": 10,
+      "inner_min_test": 3,
+      "inner_folds": 3,
+      "lambda_grid": [
+        0.0001,
+        0.00031622776601683794,
+        0.001,
+        0.0031622776601683794,
+        0.01,
+        0.03162277660168379,
+        0.1,
+        0.31622776601683794,
+        1.0,
+        3.1622776601683795,
+        10.0,
+        31.622776601683793,
+        100.0,
+        316.22776601683796,
+        1000.0,
+        3162.2776601683795,
+        10000.0
+      ]
+    },
+    "scaling": "center_only",
+    "inner_design": "shuffled_three_fold_in_both_outer_designs",
+    "invalid_outer_policy": "Retain original invalid-fold accession IDs as training-only in both designs; randomize only the common evaluable accession pool. Coffee Intermediate is not forced into estimability."
+  },
+  "tuning": {
+    "seed": 20261117,
+    "inner_repeats": 5,
+    "baseline": {
+      "marker_missing_max": 0.2,
+      "maf_min": 0.01,
+      "variance_min": 1e-12,
+      "outer_min_train": 20,
+      "outer_min_test": 5,
+      "inner_min_train": 10,
+      "inner_min_test": 3,
+      "inner_folds": 3,
+      "lambda_grid": [
+        0.0001,
+        0.00031622776601683794,
+        0.001,
+        0.0031622776601683794,
+        0.01,
+        0.03162277660168379,
+        0.1,
+        0.31622776601683794,
+        1.0,
+        3.1622776601683795,
+        10.0,
+        31.622776601683793,
+        100.0,
+        316.22776601683796,
+        1000.0,
+        3162.2776601683795,
+        10000.0
+      ],
+      "scaling": "center_only"
+    },
+    "replay_rtol": 1e-07,
+    "replay_atol": 1e-09,
+    "near_minimum_relative_loss_band": 0.01,
+    "loss_aggregation": [
+      "sample_weighted_mse",
+      "equal_fold_mse"
+    ],
+    "fixed_inner_designs": [
+      "archived_grouped",
+      "archived_random"
+    ],
+    "repeated_inner_designs": [
+      "grouped_repeated",
+      "random_size_matched",
+      "random_balanced"
+    ],
+    "reporting": "Sample-weighted MSE is the unchanged primary tuning loss. Equal-fold MSE is a labeled diagnostic, not a selected replacement. Outer penalty paths are descriptive and are never used to choose penalties. Repeats assess internal-partition sensitivity on the same outer data; they are not independent validation."
+  },
+  "traits": {
+    "icgt_cacao": [
+      "FR_BEN",
+      "FL_OV_NUM",
+      "FR_BW",
+      "FR_BEW",
+      "PodIndex"
+    ],
+    "agrosavia_matina": [
+      "Total pods",
+      "Healthy pods",
+      "AUDPC pods infected by FPRD",
+      "AUDPC flower cushion broom infected by WBD",
+      "AUDPC deformed branches infected by WBD"
+    ],
+    "agrosavia_criollo": [
+      "Total pods",
+      "Healthy pods",
+      "AUDPC pods infected by FPRD",
+      "AUDPC flower cushion broom infected by WBD",
+      "AUDPC deformed branches infected by WBD"
+    ],
+    "coffee_int": [
+      "production",
+      "rust",
+      "green"
+    ],
+    "coffee_prec": [
+      "production",
+      "rust",
+      "green"
+    ]
+  },
+  "sensitivity": {
+    "icgt_marker_missingness": [
+      0.1,
+      0.3,
+      0.4,
+      0.6
+    ],
+    "icgt_stricter_sample_missingness": 0.1
+  },
+  "structure_scaling": "empirical_sd"
+}
