@@ -2,7 +2,7 @@
 
 This reporting component evaluates existing out-of-fold predictions. It does not
 fit, recalibrate, rank, or select prediction models. The study drivers call the same reporting implementation. Integration tests and
-remaining platform limits are recorded in VALIDATION.md.
+platform scope are recorded in [VALIDATION.md](VALIDATION.md).
 
 ## Input and execution
 
@@ -52,7 +52,9 @@ An undefined correlation is not replaced with zero. Exact constant observations
 or predictions, and numerically unresolved variation, are excluded only from
 correlation summaries. Error metrics continue to include these observations.
 Numerical uncertainty is flagged when the centered L2 norm is below
-`1e-13 * abs(mean)`. This is a numerical-precision rule, not a performance cutoff.
+`1e-13 * abs(mean)` or the prediction-to-observation SD ratio is below `1e-10`.
+The second guard covers predictions whose mean is close to zero. These are
+numerical-precision rules.
 Small but resolved prediction variation remains eligible.
 
 The prediction-to-observation SD ratio below 1e-3 is a separate descriptive flag;
@@ -64,9 +66,41 @@ meta-analysis. Training sets overlap and accessions may be related. No confidenc
 interval or p-value is produced. Keep repeats separate. A standard deviation
 across repartitions describes that repartitioning, not independent replication.
 
-Compare model correlations on jointly eligible folds and report coverage; do not
-silently compare different eligible subsets. The standalone command reports each
+Compare model correlations on jointly eligible groups and report coverage. The standalone command reports each
 procedure separately and does not implement paired model selection or comparisons.
+
+## Fixed genetic groups for validation-design comparisons
+
+Random outer test folds mix genetic groups. Their within-fold correlations and
+cluster-out within-cluster correlations therefore measure different targets.
+For comparisons, use each sample's saved out-of-fold prediction and evaluate it
+within the same fixed genetic group, separately in each repeat. Keep the
+corresponding training mean on every record for pooled MSE skill. Do not call
+`fold_stats` on a combined genetic group with varying training means: that API
+expects one fitted outer fold. `scripts/reaggregate_frozen_predictions.py` supplies this comparison for the
+stored full-marker ridge predictions in Dataset S1.
+
+The random within-group summary combines predictions from several trained
+models. It is descriptive and does not isolate a causal contribution of
+relatedness, linkage disequilibrium, ancestry or environmental differences.
+
+## Reproducing Dataset S1
+
+`scripts/reaggregate_frozen_predictions.py` is byte-identical to the script in
+Dataset S1. It reads the two archived full-marker ridge prediction tables with
+fixed cluster labels, evaluates all retained tests and common-reference test-ID
+scopes, and optionally checks its repeat table against the supplied reference.
+The README provides the complete command. Its output tables are
+`grouped_metrics_by_group.tsv`, `grouped_metrics_by_repeat.tsv`, and
+`grouped_metrics_summary.tsv`, with provenance in `reaggregation_report.json`.
+
+The archived script retains the mean-relative numerical precision convention
+used to generate those tables. The general reporting API additionally applies
+the prediction-SD/observation-SD guard below 1e-10. An audit found zero further
+exclusions in all 301,856 saved fold records and all supplied reaggregation
+groups, so both conventions give the same eligibility on these data. Retaining
+the standalone script preserves its exact archive identity. New input data
+should use the general reporting API's precision rule.
 
 ## Prediction error
 

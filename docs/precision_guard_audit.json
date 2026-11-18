@@ -1,0 +1,9 @@
+{
+  "checked_fold_records": 301856,
+  "newly_excluded_correlations": 0,
+  "rule": "pred_sd / obs_sd < 1e-10, OR the existing mean-relative precision guard",
+  "source_sha256": "ec8c68b302ef806aa6903d791a60fb16fe6598e43c08c9922b18c2799dc8ace3",
+  "model_fitting": false,
+  "stored_error_metrics_changed": false,
+  "stored_predictions_changed": false
+}

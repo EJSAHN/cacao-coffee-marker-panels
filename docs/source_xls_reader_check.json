@@ -1,0 +1,37 @@
+{
+  "operation": "actual_source_XLS_read_with_public_v2_reader",
+  "source_url": "https://ndownloader.figshare.com/files/18105314",
+  "source_md5": "5555eb117ff5f2ad91826bb6c6a312b2",
+  "source_sha256": "3471c6900c404ffdb2d88d738281a7654fb7c978f266325abe714149271a5863",
+  "source_bytes": 61440,
+  "reader_sha256": "52ba7c7457bde3e61646e84424e3e8fbb5de85d35d0e778581d8cf58514271b3",
+  "format_detected": "xls",
+  "sheet_names": [
+    "Table S2"
+  ],
+  "comparisons": [
+    {
+      "dataset": "agrosavia_matina",
+      "n_samples": 102,
+      "n_traits": 5,
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0
+    },
+    {
+      "dataset": "agrosavia_criollo",
+      "n_samples": 102,
+      "n_traits": 5,
+      "exact_numeric_match": true,
+      "maximum_absolute_difference": 0.0
+    }
+  ],
+  "environment": {
+    "python": "3.12.14",
+    "xlrd": "2.0.1",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3"
+  },
+  "model_fitting": false,
+  "operating_system": "Linux",
+  "not_claimed": "Windows integrated study execution"
+}

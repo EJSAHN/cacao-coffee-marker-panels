@@ -1,4 +1,4 @@
-"""Read-only export of approved result tables and matched inputs."""
+"""Read-only export of reported result tables and matched inputs."""
 from pathlib import Path
 import shutil,json,csv
 import numpy as np

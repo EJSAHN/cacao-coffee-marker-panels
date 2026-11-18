@@ -1,11 +1,27 @@
 # Changelog
 
-## 2.0.0rc1 — integrated code-review candidate
+## 2.0.0
+
+- Add the exact Dataset S1 no-fit reaggregation script for saved full-marker
+  predictions, including outer-fold and fixed-cluster summaries, coverage,
+  training-mean MSE skill and common Agrosavia test-accession scopes.
+- Add a scale-relative correlation precision guard to the general reporting API.
+  The additional rule excludes no further defined correlations among the 301,856
+  archived fold records or the supplied reaggregation groups.
+- Preserve numeric Excel fields such as `residual_df` and `inner_validation_n`,
+  while keeping accession identifiers and hashes as text.
+- Connect documentation to the actual Dataset S1 and Dataset S2 file contracts.
+  Dataset files are separate supplementary archives; public data-access links
+  remain pending.
+- Retain the model-fitting procedures, configuration grids and stored predictions
+  used by the integrated code. No new model or marker-panel selection is introduced.
+
+## 2.0.0rc1 — integrated study code
 
 - Connect source decoding, recorded matched inputs, fixed partitions, prediction,
   density comparisons, variance components and validation sensitivities.
-- Preserve the eight established numerical kernels; expose portable study drivers
-  and explicit input/configuration contracts rather than personal filesystem paths.
+- Keep the numerical fitting functions unchanged from the analysis run and expose
+  portable study drivers with explicit input and configuration contracts.
 - Report within-fold correlations with coverage and training-mean MSE skill;
   retain pooled covariance diagnostics. The reporting decision followed inspection
   of earlier results and is not preregistration. Models are not reselected using
@@ -36,10 +52,9 @@ observed training standard deviations; allele-frequency scaling is retained as a
 sensitivity. These changes do not imply all original low-density improvements were
 reproduced.
 
-### Release scope
+### Validation boundary
 
-This is not a published/tagged version 2 release. Validation covers the documented
-readers, numerical kernels and representative integrated fits, not an all-model,
-all-fold raw-data rerun on every supported platform. Earlier commits and tags must
-be preserved. The candidate does not overwrite approved result tables or claim
-external population validation.
+Validation includes numerical/interface tests, source-reader checks and documented
+representative integrated fits. It does not establish an all-model, all-fold
+raw-data rerun on every platform or external-population validation. The legacy
+version 1 implementation remains available in the repository history.

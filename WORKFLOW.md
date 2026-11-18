@@ -26,8 +26,8 @@ allele and discordant-source-ID sensitivity cohorts.
 All training-derived marker filters, imputation, centering/scaling, F-ranking and
 penalty tuning are refit within inner training splits. Outer test outcomes enter
 only evaluation. Random and identity-grouped five-fold designs are repeated ten
-times; the fixed cluster-out design is evaluated once. Panels too large for the
-eligible marker set are unavailable, not silently truncated to a smaller assay.
+times; the fixed cluster-out design is evaluated once. Panels are unavailable when the requested size exceeds the eligible training
+marker set.
 Core panels are evaluated under both genotype scalings. The expanded density and
 additional model comparisons use center-only scaling on the five primary genotype
 representations. Family comparisons share a maximum 1,000-marker training-only
@@ -47,6 +47,13 @@ comparing inner membership, sample-size matching and MSE weighting. It does not
 select the best outer-test design as a new primary analysis.
 
 ## Reporting and exports
+
+`scripts/reaggregate_frozen_predictions.py` reproduces the Dataset S1 full-marker
+ridge summaries from the two supplied frozen prediction tables. It separately
+groups random predictions by outer fold and by fixed genetic cluster, retains
+repeat identities and original per-record training means, and restricts the
+common-reference scope by accession IDs. This command does not fit models.
+
 
 The reporting layer is independent of fitting. It retains repeats separately,
 uses common eligible folds for paired correlation summaries, and keeps all valid

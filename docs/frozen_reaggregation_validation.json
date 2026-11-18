@@ -1,0 +1,54 @@
+{
+  "script": "scripts/reaggregate_frozen_predictions.py",
+  "script_sha256": "2787740a7ad9a40965f7e5ea97c8c84516ebc0b9d4af5ea26da1d532b70c7c7f",
+  "identical_to_dataset_s1_script": true,
+  "prediction_rows": 101716,
+  "group_rows": 11944,
+  "repeat_rows": 1912,
+  "reference_comparison": {
+    "status": "pass",
+    "rows": 1912,
+    "max_absolute_differences": {
+      "within_fisher_r": 0.0,
+      "fisher_weight": 0.0,
+      "eligible_groups": 0.0,
+      "n_groups": 0.0,
+      "n_predictions": 0.0,
+      "fisher_n": 0.0,
+      "sample_coverage": 0.0,
+      "group_coverage": 0.0,
+      "min_group_n": 0.0,
+      "max_group_n": 0.0,
+      "mse_skill": 0.0,
+      "rmse": 0.0,
+      "pooled_r": 0.0,
+      "within_covariance_component": 0.0,
+      "between_covariance_component": 0.0,
+      "sse": 0.0,
+      "baseline_sse": 0.0
+    }
+  },
+  "inputs": [
+    {
+      "file": "R04_full_ridge_OOF_with_groups.tsv.gz",
+      "sha256": "221e81d3d97c161d20395a7b3d0543c62b35f939c270edd5aede3739a5b00276",
+      "prediction_rows": 69343
+    },
+    {
+      "file": "R10_full_ridge_OOF_with_groups.tsv.gz",
+      "sha256": "79204a5d8b56f5c6a038840d1199fb046fe0b8e1c53c965665daafeb0777d3a5",
+      "prediction_rows": 32373
+    }
+  ],
+  "saved_fold_records_checked": 301856,
+  "saved_fold_table_sha256": "ec8c68b302ef806aa6903d791a60fb16fe6598e43c08c9922b18c2799dc8ace3",
+  "additional_sd_ratio_exclusions_saved_folds": 0,
+  "additional_sd_ratio_exclusions_reaggregation_groups": 0,
+  "model_fitting": false,
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3"
+  }
+}

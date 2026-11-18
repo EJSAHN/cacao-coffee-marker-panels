@@ -1,11 +1,29 @@
 """Portable Excel export for the existing analysis environment.
 
-TSV files remain the precision-preserving source. Large sheets are split, never
-silently truncated. The workbook contains data values, not selected headlines.
+TSV files remain the precision-preserving source. Large sheets are split across
+worksheets. The workbook contains exported data values.
 """
 from pathlib import Path
 import csv,gzip,math,re,hashlib
 from .io import sha,js
+
+
+# Match complete semantic fields or suffixes. A substring such as "id"
+# also occurs in numeric fields (e.g. residual_df and inner_validation_n).
+TEXT_FIELDS = {
+    'id', 'ids', 'sample_id', 'marker_id', 'accession_id', 'fold', 'cluster',
+    'identity_component', 'code', 'chrom', 'chromosome', 'position', 'path',
+    'name', 'trait', 'model', 'chosen_model', 'scheme', 'scenario', 'dataset',
+    'status', 'reason', 'design', 'objective', 'source', 'boundary', 'target',
+    'source_stage', 'evaluation_scope', 'scaling', 'role', 'method', 'encoding',
+}
+
+def is_text_column(header):
+    name = str(header).strip().lower()
+    suffixes = ('_id', '_ids', '_sha256', '_hash', '_code', '_chrom',
+                '_chromosome', '_position', '_path', '_name', '_status',
+                '_reason', '_model', '_scenario', '_dataset', '_scheme')
+    return name in TEXT_FIELDS or name.endswith(suffixes)
 
 
 def export_tables(tables,out,title='Cacao and coffee analysis results'):
@@ -51,7 +69,7 @@ def export_tables(tables,out,title='Cacao and coffee analysis results'):
                 for h,v in zip(headers,row):
                     val=None if v in ('','nan','NaN','None') else v
                     # IDs, code labels and hashes must remain text, including leading zeros.
-                    is_id=any(k in h.lower() for k in ('id','hash','code','chrom','position','path','name','trait','model','scheme','scenario','dataset','status','reason','design','objective','source','boundary','target'))
+                    is_id=is_text_column(h)
                     if val is not None and not is_id and re.fullmatch(r'[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?',v):
                         f=float(v);val=int(v) if re.fullmatch(r'[+-]?\d+',v) and abs(f)<1e15 else f
                     c=WriteOnlyCell(ws,value=val)

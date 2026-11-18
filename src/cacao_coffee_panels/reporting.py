@@ -7,9 +7,10 @@ from __future__ import annotations
 import hashlib, json, math
 import numpy as np
 
-VERSION='0.2.0'
+VERSION='0.2.1'
 FISHER_CLIP=1e-12
 SMALL_SPREAD_RATIO=1e-3
+NUMERIC_SPREAD_RATIO=1e-10
 
 def fingerprint(ids, values=None):
     ids=np.asarray(ids,dtype=str)
@@ -54,7 +55,7 @@ def fold_stats(y,p,b,ids):
     r,status=pearson(y,p);rho,_=pearson(ranks(y),ranks(p))
     sd_y=math.sqrt(sy/(n-1)) if n>1 else float('nan');sd_p=math.sqrt(sp/(n-1)) if n>1 else float('nan')
     ratio=sd_p/sd_y if sd_y>0 else float('nan')
-    near_p=(math.sqrt(sp)<1e-13*abs(pm)) if sp>0 else False
+    near_p=((math.sqrt(sp)<1e-13*abs(pm)) or (np.isfinite(ratio) and ratio<NUMERIC_SPREAD_RATIO)) if sp>0 else False
     near_y=(math.sqrt(sy)<1e-13*abs(ym)) if sy>0 else False
     if (near_p or near_y) and status == 'ok':
         r = float('nan')

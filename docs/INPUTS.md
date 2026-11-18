@@ -17,7 +17,7 @@ Each cohort directory contains:
 IDs and deterministic seed labels are computational identities, not display
 labels. They must not be renamed for presentation. Display names belong in a
 separate trait dictionary. Both incomplete target values and duplicate IDs fail
-rather than being silently dropped or imputed.
+and must be resolved before analysis.
 
 ## Recorded training-only screens
 
@@ -28,10 +28,8 @@ train/test ID hashes. Arrays identify the training-selected feature order for ea
 inner split and the final outer-training fit. They contain no test phenotype
 selection. Replay checks sizes, uniqueness and training-marker eligibility.
 
-The original raw source-code correction, upstream phenotype adjustment and the
-meaning of source environments remain provenance issues. Frozen screens do not
-certify independent validation; they enable a numerical replay of a documented
-selection history. Do not manufacture screen archives after looking at test outcomes.
+Recorded screens preserve feature order. Upstream source phenotype adjustment and
+genotype processing remain part of the providers' data provenance.
 
 ## Prediction tables
 
@@ -52,3 +50,22 @@ single-fold convenience API also retains its older y_true/y_pred aliases.
 
 An optional sha256 pins each source. Relative paths are resolved from the catalog,
 not the shell directory. Output filenames cannot escape the export directory.
+
+## Dataset S1 frozen-prediction inputs
+
+The standalone `scripts/reaggregate_frozen_predictions.py` uses the two files in
+Dataset S1's `reaggregation/` directory. Their archived names are
+`R04_full_ridge_OOF_with_groups.tsv.gz` and
+`R10_full_ridge_OOF_with_groups.tsv.gz`. These names are provenance identifiers:
+the first contains primary full-marker ridge predictions and the second the
+size-matched/common-inner-rule sensitivity.
+
+Required columns are `source_stage`, `dataset`, `scheme`, `repeat`, `fold`, `trait`,
+`model`, `sample_id`, `y_true`, `y_pred`, `train_mean`, and `fixed_cluster`.
+Unlike one fitted outer fold, a fixed genetic cluster assembled from random
+out-of-fold predictions can have several training means. Each record retains its
+own mean for error calculations. The optional reference table is
+`grouped_metrics_by_repeat.tsv`; comparison uses keyed rows and numerical tolerance
+1e-12. Input file identities are recorded in the output report.
+
+See [data access](DATA_ACCESS.md) for archive names, hashes and availability.

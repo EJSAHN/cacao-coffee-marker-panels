@@ -1,9 +1,10 @@
 cff-version: 1.2.0
-message: "Cite the immutable reviewed commit used; this is a release candidate, not a tagged release."
+message: "Please cite this software and the original data sources. Record the immutable commit used for the analysis."
 title: "cacao-coffee-marker-panels"
 type: software
 authors:
   - family-names: Ahn
     given-names: Ezekiel
-version: 2.0.0rc1
+version: 2.0.0
 repository-code: "https://github.com/EJSAHN/cacao-coffee-marker-panels"
+license: MIT

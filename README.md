@@ -1,52 +1,71 @@
 # cacao-coffee-marker-panels
 
-Genomic prediction, marker-density comparisons, and validation-design sensitivity
-for public cacao and coffee genotype–phenotype resources.
+Genomic prediction, validation-design comparison, and low-density SNP panel
+evaluation for public cacao and coffee genotype–phenotype data.
 
-**Version 2.0.0rc1 is a code-review candidate, not a tagged release.** It connects
-the source-specific readers, preserved numerical implementations, study drivers,
-and tabular reporting. The approved study results are not overwritten by running
-this code. See [validation scope](docs/VALIDATION.md) and [changes from version 1](CHANGELOG.md).
+Version 2.0.0 provides source-specific readers, nested prediction and marker-panel
+procedures, recorded-partition replay, and reporting from saved predictions.
+See [changes from version 1](CHANGELOG.md), [data access](docs/DATA_ACCESS.md),
+and [validation scope](docs/VALIDATION.md).
 
-## Existing environment
+## Requirements
 
 Python 3.10 or later, NumPy, SciPy, pandas, scikit-learn, openpyxl and xlrd are
-required. `requirements.txt` gives supported ranges; `requirements-reproduction.txt`
-records the versions used in the original Windows analysis. Do not upgrade a
-working shared environment merely to run this repository. No command installs
-packages, downloads source data, or modifies remote repositories.
+required. `requirements.txt` gives supported ranges. The original Windows analysis
+versions are recorded in `requirements-reproduction.txt`.
 
-Run from the repository directory; editable installation is not necessary:
+Run commands from the repository directory; editable installation is optional.
+To check the numerical and interface tests:
 
 ```text
-python run.py verify-input --data matched/icgt_cacao
 python -m unittest discover -s tests -v
 ```
 
-## Two reproducibility routes
+## Recalculate reported summaries without fitting
 
-### 1. Recorded matched inputs and partitions
-
-Use the supplied matched dosage matrices, source target values, sample/marker IDs,
-and recorded validation assignments. This preserves the study cohorts and splits.
+Dataset S1 contains the saved primary and size-matched full-marker ridge
+predictions, fixed genetic-cluster labels, and reference summary tables.
+Extract `Ahn_CacaoCoffee_Dataset_S1_Tables_R1_v1.zip` beside this repository, then run:
 
 ```text
-python run.py import-matched --input supplied_matched_inputs --out matched
-python run.py import-screens --input supplied_model_checkpoints --matched matched --out model_screens
-python run_study.py --input matched --config config/study.json --out study_output --recorded-screens model_screens/index.json
+python scripts/reaggregate_frozen_predictions.py --input-dir ../Ahn_CacaoCoffee_Dataset_S1_Tables_R1_v1/reaggregation --output-dir reaggregated_results --check-against ../Ahn_CacaoCoffee_Dataset_S1_Tables_R1_v1/reaggregation/grouped_metrics_by_repeat.tsv
 ```
 
-`import-screens` is optional for new analyses. For replay of stochastic models it
-preserves the recorded **training-only** F-ranking order. Near-tied scores can
-otherwise reorder columns across numerical backends, changing a tree's random
-feature draws. It does not insert fitted predictions or use held-out phenotypes.
-Its IDs, eligibility and input hashes are checked. See [reproduction inputs](docs/INPUTS.md).
+This script is identical to the copy in Dataset S1. It requires only NumPy and
+pandas, reads stored predictions and each prediction's original training mean,
+and produces group-level, repeat-level and summary TSVs. It reports both
+outer-fold and fixed-cluster correlations, eligible group/sample coverage,
+training-mean-relative MSE skill, and pooled covariance diagnostics.
+[Reporting definitions](docs/PREDICTION_REPORTING.md) explain the two aggregation
+units and the precision conventions.
 
-### 2. Source files to new matched inputs
+Dataset S1 and Dataset S2 are supplied as supplementary archives with the study.
+They are not bundled in this code repository. A public supplementary-material URL
+or dataset DOI has not yet been assigned; [data access](docs/DATA_ACCESS.md) lists
+the exact required files and the current availability boundary.
 
-Obtain the provider files in [DATA_SOURCES.md](DATA_SOURCES.md); fill in the explicit
-paths in a copy of `config/sources.example.json`. No result is selected by filename
-recency. Outputs must be outside the source folders.
+## Fit the study procedures from recorded inputs
+
+Dataset S2 contains seven matched input directories, recorded sample/marker IDs,
+cluster and identity labels, validation assignments, and 2,226 model-screen
+archives. Extract `Ahn_CacaoCoffee_Dataset_S2_R1_v1.zip` beside this repository.
+
+```text
+python run.py verify-input --data ../Ahn_CacaoCoffee_Dataset_S2_R1_v1/matched/icgt_cacao
+python run_study.py --input ../Ahn_CacaoCoffee_Dataset_S2_R1_v1/matched --config config/study.json --out study_output --recorded-screens ../Ahn_CacaoCoffee_Dataset_S2_R1_v1/model_screens/index.json
+```
+
+The first command verifies an input; the second fits models into a new output
+directory. Recorded training-only screen order preserves feature ordering for
+stochastic models. The code checks screen eligibility, input hashes and train/test
+IDs. Some inner partitions are regenerated from the recorded labels and seeds;
+the archived assignments support comparison. Use the recorded data and original
+environment specification for numerical replay. See [input contracts](docs/INPUTS.md).
+
+## Prepare new inputs from provider files
+
+Obtain the files in [DATA_SOURCES.md](DATA_SOURCES.md) and fill in explicit local
+paths in a copy of `config/sources.example.json`.
 
 ```text
 python run.py prepare --sources sources.json --out decoded
@@ -56,53 +75,49 @@ python run_study.py --input matched_new --config config/study.json --out study_o
 
 This route recomputes genotype-only structure and partitions. Library versions and
 floating-point near-ties may affect regenerated memberships and stochastic-model
-feature order. The recorded-partition route is the reference for the reported
-study. Source positions whose units are uncertain are not treated as base pairs.
+feature order. The recorded-input route is the reference for study replay.
+Source positions with uncertain units are retained as metadata.
 
-## Existing results without refitting
+## Reporting and other commands
 
-An explicit catalog lists table paths and optional SHA-256 values:
-
-```text
-python run.py collect-results --catalog result_catalog.json --out result_export
-```
-
-The command copies tables and creates `analysis_summary.xlsx`. It does not refit,
-reselect, recalibrate or reinterpret models. Large tables may be excluded from
-Excel explicitly with `"workbook": false`; they remain in the TSV export. Sheets
-exceeding the Excel row limit are split, never silently truncated.
-
-## Separate analysis commands
+`scripts/prediction_reporting.py` summarizes new stored prediction tables within
+outer folds. `collect-results` copies explicitly listed saved tables and creates
+an Excel summary. `summarize-study`, `compare-predictions`, `marker-stability`, and
+`export-workbook` also operate on saved outputs. Large Excel tables are split
+across worksheets; precision-preserving TSV files remain available.
 
 `predict-study`, `variance-study`, `qc-sensitivity`, `size-matched`, and
-`tuning-diagnostic` use the same implementations as `run_study.py`.
-`summarize-study`, `compare-predictions`, `marker-stability`, and `export-workbook`
-operate on saved outputs. Use `python run.py COMMAND --help` for arguments.
-`--max-tasks` produces a **limited test**, not a complete study. `--resume` checks
-input, settings, code and completed checkpoint hashes before reuse.
+`tuning-diagnostic` execute the procedures used by `run_study.py`. Use
+`python run.py COMMAND --help` for arguments. `--max-tasks` creates a limited test.
+`--resume` checks inputs, settings, code and completed checkpoint hashes. An
+interrupted checkpoint without `complete.json` requires a new destination or
+removal of that incomplete checkpoint before resuming.
 
 ## Interpretation
 
-The main reporting pair is descriptive within-fold Pearson correlation (Fisher-z,
-weight n−3, with eligible sample/fold coverage) and error skill relative to the
-training mean. Pooled correlations and within/between covariance contributions
-remain diagnostics. Constant or numerically unresolved correlations are undefined,
-not zero; their observations remain in error calculations. Repartitioning SD is
-not an independent-sample confidence interval. No fixed assay or realized breeding
-gain is validated by these simulations.
+Cluster-out evaluation pairs descriptive within-cluster Pearson correlation
+(Fisher-z weights n−3, with coverage) with MSE skill relative to the training mean.
+Random outer folds mix genetic groups. Their within-fold correlation and
+cluster-out within-cluster correlation summarize different targets; comparison
+within fixed genetic groups uses the same saved predictions and retains each
+record's original training mean. Random predictions within a cluster can arise
+from multiple fitted models. This comparison and the covariance decomposition do
+not isolate causal effects of linkage disequilibrium or relatedness.
 
-## Layout
+Undefined correlations remain unavailable while their observations remain in
+error calculations. Repartitioning dispersion is not an independent-sample
+confidence interval. The analyses evaluate marker-density procedures; they do not
+validate a fixed assay or realized breeding gain.
 
-```text
-config/                     Explicit source and study settings
-src/cacao_coffee_panels/     Readers, numerical kernels, drivers and exporters
-scripts/prediction_reporting.py  Stored-prediction reporting entry point
-run.py                      Command-line entry point
-run_study.py                Ordered study execution with phase checkpoints
-tests/                      Unit and interface tests
-docs/                       Input contracts, reporting definitions and validation scope
-```
+## Files and licensing
 
-No source data or generated results are bundled. Outputs are written only to the
-user-specified destination. The MIT license applies to the code, not third-party
-data. Record the immutable commit or reviewed release used for each analysis.
+- `config/`: source and study settings.
+- `src/cacao_coffee_panels/`: readers, fitting procedures, drivers and exporters.
+- `scripts/`: stored-prediction reporting and Dataset S1 reaggregation.
+- `tests/`: numerical and interface checks.
+- `docs/`: input contracts, data access, reporting definitions and validation.
+
+The MIT license applies to the code. Third-party data retain their source licenses.
+Record the immutable commit used for each analysis; citation metadata are in
+`CITATION.cff`. Analysis commands write to the requested local destination and do
+not download data or modify this repository remotely.
